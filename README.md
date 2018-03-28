@@ -73,33 +73,37 @@ This README was written by Kevin Lanzing for the Udacity Linux Server Configurat
 22. Initialize your database with `sudo python database_setup.py`.
 23. Create and configure the virtual host with `sudo nano /etc/apache2/sites-available/catalog.conf`.
 24. Copy the following lines of code to 'catalog.conf' to configure:
-><VirtualHost *:80>
-> &nbsp;&nbsp;&nbsp;&nbsp;ServerName http://ec2-18-219-96-221.us-east-2.compute.amazonaws.com/
-> &emsp;ServerAdmin klanzing@gmail.com
-> &emsp;WSGIScriptAlias / /var/www/catalog/catalog.wsgi
-> &emsp;<Directory /var/www/catalog/catalog/>
-> &emsp;&emsp;Order allow,deny
-> &emsp;&emsp;Allow from all
-> &emsp;</Directory>
-> &emsp;Alias /static /var/www/catalog/catalog/static
-> &emsp;<Directory /var/www/catalog/catalog/static/>
-> &emsp;&emsp;Order allow,deny
-> &emsp;&emsp;Allow from all
-> &emsp;</Directory>
->
-> &emsp;ErrorLog ${APACHE_LOG_DIR}/error.log
-> &emsp;LogLevel warn
-> &emsp;CustomLog ${APACHE_LOG_DIR}/access.log combined
-> </VirtualHost>
+```
+<VirtualHost *:80>
+    ServerName http://ec2-18-219-96-221.us-east-2.compute.amazonaws.com/
+    ServerAdmin klanzing@gmail.com
+    WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+    <Directory /var/www/catalog/catalog/>
+        Order allow,deny
+        Allow from all
+    </Directory>
+    Alias /static /var/www/catalog/catalog/static
+    <Directory /var/www/catalog/catalog/static/>
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
 25. Enable the virtual host with `sudo a2ensite catalog`.
 26. Create the .wsgi file with `sudo nano catalog.wsgi`. Copy the following lines of code into the file, and save:
-> #!/usr/bin/python
-> import sys
-> import logging
-> logging.basicConfig(stream=sys.stderr)
-> sys.path.insert(0,"/var/www/catalog/")
->
-> from catalog import app as application
-> application.secret_key = 'Add your secret key'
+```
+#!/usr/bin/python
+import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0,"/var/www/catalog/")
+
+from catalog import app as application
+application.secret_key = 'Add your secret key'
+```
 25. Restart Apache with `sudo service apache2 restart`.
 26. Navigate to http://ec2-18-219-96-221.us-east-2.compute.amazonaws.com/ with your favorite browser. If all went well, the catalog project 'Gastronaut.com' should load. Congratulations!
