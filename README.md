@@ -45,10 +45,16 @@ This README was written by Kevin Lanzing for the Udacity Linux Server Configurat
 11. Use `cat .ssh/grader_key.pub` to reveal your public key. Copy the contents.
 12. Return to your server as user 'grader' with `ssh grader@18.219.96.221 -p 2200` and password 'grader'. Use `nano .ssh/authorized_keys` and paste your public key to a single line of this file. Save and exit.
 13. Run `chmod 700 .ssh` and `chmod 644 .ssh/authorized_keys` to further secure your public key.
-14. From now on, access the server as grader with `ssh grader@18.219.96.221 -p 2200 -i ~/.ssh/grader_key` and password 'grader'. You may wish to test this now.
+14. From your local machine, type `ls ~/.ssh` to navigate to your .ssh folder, `touch config` to create a 'config' file, and `sudo nano config` to edit the file. Enter the following:
+```
+Host 18.219.96.221 # should be xxx.xxx.xxx.xx
+  IdentityFile ~/.ssh/grader_key
+```
+Save the file, and exit. From now on, ssh will look at grader_key for authentication and (most importantly) will never default to password-based authentication.
+17. From now on, access the server as grader with `ssh grader@18.219.96.221 -p 2200` and password 'grader'. You may wish to test this now.
 
 ### Prepare to deploy your project.
-17. Configure the local timezone to UTC with `sudo dpkg-reconfigure tzdata`. Select 'UTC'.
+18. Configure the local timezone to UTC with `sudo dpkg-reconfigure tzdata`. Select 'UTC'.
 12. Install Apache with `sudo apt-get install apache2`.
 13. Install mod_wsgi with `sudo apt-get install python-setuptools libapache2-mod-wsgi`.
 14. (Re)start Apache with `sudo service apache2 restart`.
@@ -63,7 +69,7 @@ This README was written by Kevin Lanzing for the Udacity Linux Server Configurat
 29. Install 'git' with `sudo apt-get install git`.
 
 ### Deploy the Item Catalog project.
-30. Use `cd /var/www` to navigate to the directory where you will place your application.
+31. Use `cd /var/www` to navigate to the directory where you will place your application.
 16. Create application directory with `sudo mkdir catalog`. Use `cd catalog` to enter the folder you just created.
 17. Clone the Item Catalog with `git clone https://github.com/M0merath/Catalog.git`.
 18. Rename `catalog.py` to `__init__.py` with `sudo mv catalog.py __init__.py`.
@@ -93,7 +99,7 @@ This README was written by Kevin Lanzing for the Udacity Linux Server Configurat
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
-25. Enable the virtual host with `sudo a2ensite catalog`.
+41. Enable the virtual host with `sudo a2ensite catalog`.
 26. Create the .wsgi file with `sudo nano catalog.wsgi`. Copy the following lines of code into the file, and save:
 ```
 #!/usr/bin/python
@@ -105,5 +111,5 @@ sys.path.insert(0,"/var/www/catalog/")
 from catalog import app as application
 application.secret_key = 'Add your secret key'
 ```
-25. Restart Apache with `sudo service apache2 restart`.
+43. Restart Apache with `sudo service apache2 restart`.
 26. Navigate to http://ec2-18-219-96-221.us-east-2.compute.amazonaws.com/ with your favorite browser. If all went well, the catalog project 'Gastronaut.com' should load. Congratulations!
